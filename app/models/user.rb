@@ -5,11 +5,13 @@ class User < ActiveRecord::Base
 	before_save :encrypt_password
 	after_save :clear_password
 
+	USER_TYPES = %w(student instructor ta Student Instructor TA)
+
 	validates :id, :presence => true, :uniqueness => true, :length => { :in => 3..20 }
 	validates :password, :confirmation => true #password_confirmation attr
 	validates_length_of :password, :in => 6..20, :on => :create
-
-	attr_accessible :id, :password, :password_confirmation
+	validates :usertype, :presence => true, :inclusion => {:in => USER_TYPES}
+	attr_accessible :id, :password, :password_confirmation, :usertype
 
 	def self.authenticate(username_or_email="", login_password="")
 		user = User.find_by_id(username_or_email)
