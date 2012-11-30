@@ -14,4 +14,9 @@ class CoursesController < ApplicationController
 	end
  	render "new"
   end
+
+  def show
+	@course = Course.find(params[:id])
+	render 'show'
+  end
 end

@@ -6,6 +6,9 @@ MOOC::Application.routes.draw do
   get "courses/new"
 
   #resources :users
+  resources :courses do
+	resources :assignments
+  end
 
   match ':controller(/:action(/:id))(.:format)'
   root :to => 'sessions#login'
@@ -15,7 +18,6 @@ MOOC::Application.routes.draw do
   match "home", :to => "sessions#home"
   match "profile", :to => "sessions#profile"
   match "setting", :to => "sessions#setting"
-  match "assignments", :to => "assignments#assignments"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

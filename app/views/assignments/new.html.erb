@@ -1,0 +1,8 @@
+<div class= "Assignment_Form">
+	<h2>Add Assignment</h2>
+	<%= form_for(:assignment, :url => {:controller => 'assignments', :action => 'create', :course => @course}) do |f| %>
+
+		<p> Assignment Name:</br> <%= f.text_field :name%> </p>
+		<%= f.submit :Submit %>
+	<% end %>
+</div>
