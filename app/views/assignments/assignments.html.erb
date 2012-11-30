@@ -1,0 +1,11 @@
+<h2 class='User_Header'><%=@current_user.name%>'s Assignments for Course <h2>
+<% @current_user.courses.each do |course| %>
+  <p>
+    <b>Assignment Id:</b>
+    <%= course.id %>
+	&nbsp &nbsp &nbsp 
+	<b>Assignment Name:</b>
+    <%= course.name %>
+  </p>
+<% end %>
+</div>
