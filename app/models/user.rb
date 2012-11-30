@@ -7,14 +7,17 @@ class User < ActiveRecord::Base
 
 	USER_TYPES = %w(student instructor ta Student Instructor TA)
 
-	validates :id, :presence => true, :uniqueness => true, :length => { :in => 3..20 }
+	validates :username, :presence => true, :uniqueness => true, :length => { :in => 3..20 }
+	validates :name, :presence => true
 	validates :password, :confirmation => true #password_confirmation attr
 	validates_length_of :password, :in => 6..20, :on => :create
 	validates :usertype, :presence => true, :inclusion => {:in => USER_TYPES}
-	attr_accessible :id, :password, :password_confirmation, :usertype
+	attr_accessible :username, :name, :password, :password_confirmation, :usertype
+
+	has_and_belongs_to_many :courses
 
 	def self.authenticate(username_or_email="", login_password="")
-		user = User.find_by_id(username_or_email)
+		user = User.find_by_username(username_or_email)
 
 		if user && user.match_password(login_password)
 			return user

@@ -3,7 +3,9 @@
 	<h1>Sign Up</h1>
 	<%= form_for(:user, :url => {:controller => 'users', :action => 'create'}) do |f| %>
 
-		<p> Username:</br> <%= f.text_field :id%> </p>
+		<p> Username:</br> <%= f.text_field :username%> </p>
+
+		<p> Name:</br> <%= f.text_field :name%> </p>
 
 		<p> Password:</br> <%= f.password_field :password%></p>
 

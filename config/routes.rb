@@ -1,4 +1,6 @@
 MOOC::Application.routes.draw do
+  get "courses/new"
+
   #resources :users
 
   match ':controller(/:action(/:id))(.:format)'
