@@ -1,4 +1,6 @@
 MOOC::Application.routes.draw do
+  get "courses_users/new"
+
   get "courses/new"
 
   #resources :users

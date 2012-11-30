@@ -1,18 +1,28 @@
-<h2 class='User_Header'><%=@current_user.name%> Courses <h2>
+<h2 class='User_Header'><%=@current_user.name%>'s Courses <h2>
 <% @current_user.courses.each do |course| %>
   <p>
     <b>Course ID:</b>
     <%= course.id %>
-  </p>
- 
-  <p>
-    <b>Course Name:</b>
-    <%= comment.name %>
+	&nbsp &nbsp &nbsp 
+	<b>Course Name:</b>
+    <%= course.name %>
   </p>
 <% end %>
 
+<div class= "Add_Students_To_Classes">
+	<h2>Add Students to Class</h2>
+	<%= form_for(:courses_users, :url => {:controller => 'courses_users', :action => 'create'}) do |f| %>
+
+		<p> Course Id:</br> <%= f.text_field :course_id%> </p>
+
+		<p> Student Id:</br> <%= f.text_field :user_id%> </p>
+
+		<%= f.submit :Submit %>
+	<% end %>
+</div>
+
 <div class= "Class_Form">
-	<h1>Add Class</h1>
+	<h2>Add Class</h2>
 	<%= form_for(:course, :url => {:controller => 'courses', :action => 'create'}) do |f| %>
 
 
@@ -26,9 +36,7 @@
 		
 		<p> Section: </br> <%= f.text_field :section%> </p>
 
-		<p> Student ID: </br> <%= f.text_field :user_id%> </p>
-
-		<%= f.submit :Signup %>
+		<%= f.submit :Submit %>
 	<% end %>
 
 </div>

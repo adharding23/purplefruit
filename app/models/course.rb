@@ -6,9 +6,8 @@ class Course < ActiveRecord::Base
 	validates :section, :presence => true, :length => { :in => 4..4 }
 	validates :semester, :presence => true, :inclusion => {:in => SEMESTER_TYPES}
 	validates :year, :presence => true, :length => { :in => 4..4 }
-	#validates :user_id, :presence => true, :length => { :in => 3..20 }
 
-	attr_accessible :coursenumber, :name, :section, :semester, :year, :user_id
+	attr_accessible :coursenumber, :name, :section, :semester, :year
 
   	has_and_belongs_to_many :users
 end
