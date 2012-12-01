@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  question: MyString
+  answer: MyString
+  hint: MyString
+  mc: false
+
+two:
+  question: MyString
+  answer: MyString
+  hint: MyString
+  mc: false
