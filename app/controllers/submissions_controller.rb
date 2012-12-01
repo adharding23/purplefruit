@@ -18,25 +18,12 @@ class SubmissionsController < ApplicationController
 
 	end
 
-	def update
-		@submission = Submission.find(params[:submission][:submission_id])
-		params[:submission].each do |key, value|
-			if is_numeric?(key)
-				# = { :studentanswer => { :qid=>key,:answer=>value,:pointsreceived=>0 }
-				@submission.studentanswers.build({:studentanswer=>{:qid=>key,:answer=>value,:pointsreceived=>0}})
-			else
-				flash[:notice] = key
-			end
-		end
-		if @submission.save
-			flash[:notice] = "Answers Added"
-			flash[:color]= "valid"
-		else
-			flash[:notice] = "Form is invalid"
-			flash[:color]= "invalid"
-		end
-		redirect_to :back
-	end
+	def show
+		@user = User.find(params[:user_id])
+		@course = Course.find(params[:course_id])
+		@assignment = Assignment.find(params[:assignment_id])
+		@submission = Submission.find(params[:submission_id])
+	end	
 
 	def is_numeric?(obj) 
    		obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true

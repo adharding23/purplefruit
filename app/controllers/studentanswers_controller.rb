@@ -13,6 +13,8 @@ class StudentanswersController < ApplicationController
 				@studentanswer.qid = key
 				@studentanswer.answer = value
 				@studentanswer.pointsreceived = 0
+				@deleteanswers = Studentanswer.find_all_by_submission_id_and_qid(@submission.id,key)
+				@deleteanswers.each { |answer| answer.destroy }
 				#@submission.studentanswers = @studentanswer
 				@studentanswer.save
 			else
@@ -26,6 +28,26 @@ class StudentanswersController < ApplicationController
 			flash[:notice] = "Form is invalid"
 			flash[:color]= "invalid"
 		end
+		redirect_to :back
+	end
+
+	def update
+		@submission = Submission.find(params[:studentanswer][:submission_id])
+		@totalpoints = 0
+		params[:studentanswer].each do |key, value|
+			if is_numeric?(key)
+				@studentanswer = Studentanswer.find_by_submission_id_and_id(@submission.id,key)
+				unless value.empty?
+					@totalpoints = @totalpoints + value.to_i
+					@studentanswer.update_attribute(:pointsreceived, value)
+					flash[:notice] = "Points Updated"
+				else 
+					@totalpoints += @studentanswer.pointsreceived
+				end
+			end
+		end
+		@submission.update_attribute(:pointsreceived, @totalpoints)
+		@submission.update_attribute(:completionstatus, true)
 		redirect_to :back
 	end
 

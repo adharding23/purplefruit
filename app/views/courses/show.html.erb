@@ -3,15 +3,30 @@
   <p>
 	<b>Assignment:</b>
 	<%if DateTime.now > assignment.duedate %>
-		<%= assignment.name %> 
+		<%unless User.find(session[:user_id]).usertype == 'student'%>
+			<%= link_to "Grade "+assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %> 
+		<%else%>
+			<%= assignment.name %>
+		<%end%> 
 	<%else%>
 		<%= link_to assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %> 
-
 	<%end%>
 	&emsp;
 	<%= assignment.totalpoints %> 
 	&emsp;
 	<%= assignment.duedate %>
+	&emsp;
+	<%if DateTime.now > assignment.duedate %>
+		<% @uasobject = UsersAssignmentsSubmissions.find_by_user_id_and_assignment_id(session[:user_id],assignment.id)%>
+		<% if @uasobject.nil?%>
+			0
+		<% else %>
+			<% @submission = Submission.find(@uasobject.submission_id) %>
+			<%if @submission.completionstatus %>
+				<%=@submission.pointsreceived%>
+			<%end%>
+		<% end %>
+	<%end%>
   </p>
 <% end %>
 

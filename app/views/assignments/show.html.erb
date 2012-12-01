@@ -1,22 +1,27 @@
 <h2 class='User_Header'><%=@assignment.name%> <h2>
-<%unless session[:user_id]%>
-			<ul class="nav">
-								<li><%= link_to :Signup , :signup, class: "nav_links"%></li>|
-				<li><%= link_to :Login , :login, class: "nav_links"%></li>	
-			</ul>
-		<%else%>
-			<ul class="nav">
-				<%=@current_user = User.find(session[:user_id])%> 
-				<li><%= link_to :Home , :home, class: "nav_links" %> |</li>
-				<li><%= link_to :Profile , :profile, class: "nav_links" %> |</li>
-				<li><%= link_to :Setting , :setting, class: "nav_links" %> |</li>
-				<li><%= link_to :Logout , :logout, class: "nav_links" %></li>	
-			</ul>
-		<%end%>
 <p> Due Date:</br> <%= @assignment.duedate%> </p>
 <p> Total Points:</br> <%= @assignment.totalpoints%> </p>
 
 <%unless User.find(session[:user_id]).usertype == 'student'%>
+<%if DateTime.now > @assignment.duedate %>
+	<%@allcoursestudents=CoursesUsers.find_all_by_course_id(@assignment.course_id)%>
+	<%@allcoursestudents.each do |courseuser| %>
+		<%@usersubmission=UsersAssignmentsSubmissions.find_by_user_id_and_assignment_id(courseuser.user_id, @assignment.id)%>
+		<%@actualsubmission=Submission.find(@usersubmission.submission_id)%>
+		<p>
+			<%= User.find(courseuser.course_id).name %>
+			&emsp;
+			<%= @actualsubmission.id %> 
+			&emsp;
+			<%= @actualsubmission.pointsreceived %>
+			&emsp;
+			<%= @actualsubmission.completionstatus %>
+			<%= link_to "Grade Submission", assignment_submission_path(:user_id=>courseuser.user_id, :course_id=>courseuser.course_id,:assignment_id => @assignment.id, :submission_id => @actualsubmission.id) %> 
+
+ 		 </p>
+
+	<%end%>
+<%else%>
 <p>
 	<b>Question</b>
 	&emsp;
@@ -61,6 +66,8 @@
 	<p> Points:</br> <%= f.text_field :value%> </p>
 	<%= f.submit :Submit %>
 <% end %>
+<%end%>
+
 <%else%>
 	<%if DateTime.now > @assignment.duedate %>
 		<p> DUE DATE ALREADY PASSED </p>
@@ -85,7 +92,7 @@
 				<%end%>
 				
 			<% end %>
-						<%= f.submit :SubmitYAY %>
+						<%= f.submit :Submit %>
 		<% end %>
 	<%else%>
 		<%= form_for(:submission, :url => {:controller => 'submissions', :action => 'create', :assignment => @assignment}) do |f| %>

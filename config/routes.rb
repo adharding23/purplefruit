@@ -20,6 +20,11 @@ MOOC::Application.routes.draw do
 	resources :assignments
   end
 
+  resources :assignments do
+	resources :submissions
+  end
+
+
   resources :submissions do
 	resources :studentanswers
   end
