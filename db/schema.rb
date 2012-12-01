@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121201002941) do
+ActiveRecord::Schema.define(:version => 20121201060319) do
 
   create_table "assignments", :force => true do |t|
     t.string   "name"
@@ -67,6 +67,27 @@ ActiveRecord::Schema.define(:version => 20121201002941) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "studentanswers", :force => true do |t|
+    t.integer  "qid"
+    t.string   "answer"
+    t.integer  "pointsreceived"
+    t.integer  "submission_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "studentanswers", ["submission_id"], :name => "index_studentanswers_on_submission_id"
+
+  create_table "submissions", :force => true do |t|
+    t.boolean  "completionstatus"
+    t.integer  "pointsreceived"
+    t.integer  "assignment_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "submissions", ["assignment_id"], :name => "index_submissions_on_assignment_id"
+
   create_table "users", :force => true do |t|
     t.string   "username"
     t.string   "name"
@@ -76,5 +97,17 @@ ActiveRecord::Schema.define(:version => 20121201002941) do
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
   end
+
+  create_table "users_assignments_submissions", :force => true do |t|
+    t.integer  "assignment_id"
+    t.integer  "submission_id"
+    t.integer  "user_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "users_assignments_submissions", ["assignment_id"], :name => "index_users_assignments_submissions_on_assignment_id"
+  add_index "users_assignments_submissions", ["submission_id"], :name => "index_users_assignments_submissions_on_submission_id"
+  add_index "users_assignments_submissions", ["user_id"], :name => "index_users_assignments_submissions_on_user_id"
 
 end

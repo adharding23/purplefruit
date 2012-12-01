@@ -1,19 +1,27 @@
 MOOC::Application.routes.draw do
+  
+  get "users_assignments_submissions/new"
+
   get "assignments_questions/new"
 
   get "questions/new"
 
   get "questions/show"
 
-  get "assignments/assignments"
-
   get "courses_users/new"
 
   get "courses/new"
 
+  get "submissions/new"
+
+  #resources :users_assignments_submissions
   #resources :users
   resources :courses do
 	resources :assignments
+  end
+
+  resources :submissions do
+	resources :studentanswers
   end
 
   match ':controller(/:action(/:id))(.:format)'

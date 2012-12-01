@@ -3,7 +3,8 @@ class Assignment < ActiveRecord::Base
 	validates :duedate, :presence => true
 	validates :totalpoints, :presence => true	
 
-	attr_accessible :name, :duedate, :totalpoints, :assignment_id
+	attr_accessible :name, :duedate, :totalpoints, :assignment_id, :id
     belongs_to :course
 	has_and_belongs_to_many :questions
+	has_many :submissions
 end

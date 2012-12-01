@@ -2,7 +2,12 @@
 <% @course.assignments.each do |assignment| %>
   <p>
 	<b>Assignment:</b>
-	<%= link_to assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %> 
+	<%if DateTime.now > assignment.duedate %>
+		<%= assignment.name %> 
+	<%else%>
+		<%= link_to assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %> 
+
+	<%end%>
 	&emsp;
 	<%= assignment.totalpoints %> 
 	&emsp;

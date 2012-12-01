@@ -4,7 +4,7 @@ class AssignmentsQuestionsController < ApplicationController
   end
 
   def create
-	@assignment = Assignment.find(1)
+	@assignment = Assignment.find(params[:assignments_questions][:assignment_id])
     @assignments_questions = AssignmentsQuestions.new(params[:assignments_questions])
 	if @assignments_questions.save
 		flash[:notice] = "You have added a question"

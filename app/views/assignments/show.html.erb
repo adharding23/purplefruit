@@ -1,24 +1,99 @@
 <h2 class='User_Header'><%=@assignment.name%> <h2>
+<%unless session[:user_id]%>
+			<ul class="nav">
+								<li><%= link_to :Signup , :signup, class: "nav_links"%></li>|
+				<li><%= link_to :Login , :login, class: "nav_links"%></li>	
+			</ul>
+		<%else%>
+			<ul class="nav">
+				<%=@current_user = User.find(session[:user_id])%> 
+				<li><%= link_to :Home , :home, class: "nav_links" %> |</li>
+				<li><%= link_to :Profile , :profile, class: "nav_links" %> |</li>
+				<li><%= link_to :Setting , :setting, class: "nav_links" %> |</li>
+				<li><%= link_to :Logout , :logout, class: "nav_links" %></li>	
+			</ul>
+		<%end%>
 <p> Due Date:</br> <%= @assignment.duedate%> </p>
 <p> Total Points:</br> <%= @assignment.totalpoints%> </p>
 
+<%unless User.find(session[:user_id]).usertype == 'student'%>
+<p>
+	<b>Question</b>
+	&emsp;
+	<b>Answer:</b>
+	&emsp;
+	<b>Hint:</b>
+	&emsp;
+	<b>MC?:</b>
+	&emsp;
+	<b>Points:</b>
+	&emsp;
+  </p>
+
 <% @assignment.questions.each do |question| %>
+
   <p>
-	<b>Question:</b>
 	<%= question.question %> 
 	&emsp;
 	<%= question.answer %>
+	&emsp;
+	<%= question.hint %>
+	&emsp;
+	<%= question.mc %>
+	&emsp;
+	<%= question.value %>
+
   </p>
 <% end %>
 
+<%= form_for(:assignments_questions, :url => {:controller => 'assignments_questions', :action => 'create'}) do |f| %>
+	<p> Select Question to Add From Bank:</br> <%= collection_select(:assignments_questions, :question_id, Question.all, :id, :question) %> </p>
+	<%= f.hidden_field :assignment_id, :value=>@assignment.id%>
+	<%= f.submit :Submit %>
+<% end %>
+<p/>
+<b>Add Question to Question Bank:</b>
 <%= form_for(:question, :url => {:controller => 'questions', :action => 'create'}) do |f| %>
 	<p> Question:</br> <%= f.text_field :question%> </p>
 	<p> Answer:</br> <%= f.text_field :answer%> </p>
 	<p> Hint:</br> <%= f.text_field :hint%> </p>
 	<p> Multiple Choice?:</br> <%= f.select :mc, {'Yes'=>true, 'No'=>false}%> </p>
 	<p> Points:</br> <%= f.text_field :value%> </p>
-	<%= f.hidden_field :assignment_id, :value=>@assignment.id%>
 	<%= f.submit :Submit %>
-	<%= collection_select(:question, :question_id, Question.all, :id, :question) %>
 <% end %>
+<%else%>
+	<%if DateTime.now > @assignment.duedate %>
+		<p> DUE DATE ALREADY PASSED </p>
+	<%else%>
+	<%@submission2=UsersAssignmentsSubmissions.where(:user_id=>session[:user_id], :assignment_id=>@assignment.id)%>
+	<%if @submission2.any?%>
+		<%@actualsubmission=Submission.find(@submission2.first_or_create.submission_id)%>
+
+		<%= form_for(:studentanswer, :url => {:controller => 'studentanswers', :action => 'create'}) do |f| %>
+			<%= f.hidden_field :submission_id, :value=>@submission2.first_or_create.submission_id%>
+
+			<% @assignment.questions.each do |question| %>
+  				<p>
+					<%= question.question %> 
+					&emsp;
+					<%= question.value %>
+  				</p>
+				<p> Type Answer:</br> <%= f.text_field question.id%> </p>
+				<%@sanswer=Studentanswer.where(:submission_id=>@submission2.first_or_create.submission_id, :qid=>question.id)%>
+				<%if @sanswer.any?%>
+					<p> Previous Student Answer:</br> <%=@sanswer.first_or_create.answer%> </p>
+				<%end%>
+				
+			<% end %>
+						<%= f.submit :SubmitYAY %>
+		<% end %>
+	<%else%>
+		<%= form_for(:submission, :url => {:controller => 'submissions', :action => 'create', :assignment => @assignment}) do |f| %>
+			<%= f.hidden_field :completionstatus, :value=>false%>
+			<%= f.hidden_field :pointsreceived, :value=>0%>			
+			<%= f.submit 'Create New Submission' %>
+		<%end%>
+	<%end%>
+	<%end%>
+<%end%>
 
