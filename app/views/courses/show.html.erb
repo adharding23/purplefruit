@@ -1,8 +1,12 @@
 <h2 class='User_Header'><%=@course.coursenumber%> <%=@course.name%>'s Assignments <h2>
 <% @course.assignments.each do |assignment| %>
   <p>
-	<b>Assignment Name:</b>
-	<%= link_to assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %>
+	<b>Assignment:</b>
+	<%= link_to assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %> 
+	&emsp;
+	<%= assignment.totalpoints %> 
+	&emsp;
+	<%= assignment.duedate %>
   </p>
 <% end %>
 

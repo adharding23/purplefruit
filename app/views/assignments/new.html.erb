@@ -2,7 +2,9 @@
 	<h2>Add Assignment</h2>
 	<%= form_for(:assignment, :url => {:controller => 'assignments', :action => 'create', :course => @course}) do |f| %>
 
-		<p> Assignment Name:</br> <%= f.text_field :name%> </p>
+		<p> Due Date:</br> <%= f.datetime_select :duedate%> </p>
+		<p> Name:</br> <%= f.text_field :name%> </p>
+		<p> Total Points:</br> <%= f.text_field :totalpoints%> </p>
 		<%= f.submit :Submit %>
 	<% end %>
 </div>

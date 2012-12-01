@@ -1,1 +1,24 @@
 <h2 class='User_Header'><%=@assignment.name%> <h2>
+<p> Due Date:</br> <%= @assignment.duedate%> </p>
+<p> Total Points:</br> <%= @assignment.totalpoints%> </p>
+
+<% @assignment.questions.each do |question| %>
+  <p>
+	<b>Question:</b>
+	<%= question.question %> 
+	&emsp;
+	<%= question.answer %>
+  </p>
+<% end %>
+
+<%= form_for(:question, :url => {:controller => 'questions', :action => 'create'}) do |f| %>
+	<p> Question:</br> <%= f.text_field :question%> </p>
+	<p> Answer:</br> <%= f.text_field :answer%> </p>
+	<p> Hint:</br> <%= f.text_field :hint%> </p>
+	<p> Multiple Choice?:</br> <%= f.select :mc, {'Yes'=>true, 'No'=>false}%> </p>
+	<p> Points:</br> <%= f.text_field :value%> </p>
+	<%= f.hidden_field :assignment_id, :value=>@assignment.id%>
+	<%= f.submit :Submit %>
+	<%= collection_select(:question, :question_id, Question.all, :id, :question) %>
+<% end %>
+

@@ -11,16 +11,28 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121130194223) do
+ActiveRecord::Schema.define(:version => 20121201002941) do
 
   create_table "assignments", :force => true do |t|
     t.string   "name"
+    t.datetime "duedate"
+    t.integer  "totalpoints"
     t.integer  "course_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "assignments", ["course_id"], :name => "index_assignments_on_course_id"
+
+  create_table "assignments_questions", :id => false, :force => true do |t|
+    t.integer  "assignment_id"
+    t.integer  "question_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "assignments_questions", ["assignment_id"], :name => "index_assignments_questions_on_assignment_id"
+  add_index "assignments_questions", ["question_id"], :name => "index_assignments_questions_on_question_id"
 
   create_table "courses", :force => true do |t|
     t.string   "name"
@@ -32,9 +44,25 @@ ActiveRecord::Schema.define(:version => 20121130194223) do
     t.datetime "updated_at",   :null => false
   end
 
-  create_table "courses_users", :force => true do |t|
+  create_table "courses_users", :id => false, :force => true do |t|
     t.integer  "course_id"
     t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "questionoptions", :force => true do |t|
+    t.string   "option"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "questions", :force => true do |t|
+    t.string   "question"
+    t.string   "answer"
+    t.string   "hint"
+    t.boolean  "mc"
+    t.integer  "value"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

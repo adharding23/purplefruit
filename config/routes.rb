@@ -1,4 +1,10 @@
 MOOC::Application.routes.draw do
+  get "assignments_questions/new"
+
+  get "questions/new"
+
+  get "questions/show"
+
   get "assignments/assignments"
 
   get "courses_users/new"
