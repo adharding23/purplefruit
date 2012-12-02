@@ -13,6 +13,7 @@ class StudentanswersController < ApplicationController
 				@studentanswer.qid = key
 				@studentanswer.answer = value
 				@studentanswer.pointsreceived = 0
+				@studentanswer.graded = false
 				@deleteanswers = Studentanswer.find_all_by_submission_id_and_qid(@submission.id,key)
 				@deleteanswers.each { |answer| answer.destroy }
 				#@submission.studentanswers = @studentanswer
@@ -40,6 +41,7 @@ class StudentanswersController < ApplicationController
 				unless value.empty?
 					@totalpoints = @totalpoints + value.to_i
 					@studentanswer.update_attribute(:pointsreceived, value)
+					@studentanswer.update_attribute(:graded,true)
 					flash[:notice] = "Points Updated"
 				else 
 					@totalpoints += @studentanswer.pointsreceived

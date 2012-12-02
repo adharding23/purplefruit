@@ -12,6 +12,27 @@
 		&emsp;
 		<%= answer.answer %>
 		<p> Points Awarded?:</br> <%= f.text_field answer.id%> </p>
+		<%if @matchingquestion.mc && answer.graded == false%>
+			<% alphabet = ["A","B","C","D","E"]%>
+			<% i = 0 %>
+			<% correctmc = false %>
+			<% @questionoptions=Questionoption.find_all_by_question_id(@matchingquestion.id).reverse %>
+			<% @questionoptions.each do |option| %>
+				<% if option.option == @matchingquestion.answer%>
+					<% if alphabet[i] == answer.answer%>
+						<%correctmc = true%>
+					<%end%>
+				<%end%>
+				<%i+=1%>
+			<% end %>
+			<%if correctmc%>
+				<%answer.pointsreceived=@matchingquestion.value%>
+			<%else%>
+				<%answer.pointsreceived=0%>
+			<%end%>
+			<%answer.graded=true%>
+			<%answer.save%>
+		<%end%>
 		<p> Current Points Awarded:</br> <%=answer.pointsreceived%> </p>
  	</p>
 <%end%>

@@ -12,6 +12,7 @@
   </p>
 <% end %>
 
+<%unless User.find(session[:user_id]).usertype == 'student'%>
 <div class= "Add_Students_To_Classes">
 	<h2>Add Students to Class</h2>
 	<%= form_for(:courses_users, :url => {:controller => 'courses_users', :action => 'create'}) do |f| %>
@@ -43,3 +44,4 @@
 	<% end %>
 
 </div>
+<%end%>

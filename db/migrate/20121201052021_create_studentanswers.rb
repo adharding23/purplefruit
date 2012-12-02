@@ -4,6 +4,7 @@ class CreateStudentanswers < ActiveRecord::Migration
       t.integer :qid
 	  t.string :answer
       t.integer :pointsreceived
+	  t.boolean :graded
 	  t.references :submission
 
       t.timestamps

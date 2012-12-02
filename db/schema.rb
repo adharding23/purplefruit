@@ -53,9 +53,12 @@ ActiveRecord::Schema.define(:version => 20121201060319) do
 
   create_table "questionoptions", :force => true do |t|
     t.string   "option"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "question_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
+
+  add_index "questionoptions", ["question_id"], :name => "index_questionoptions_on_question_id"
 
   create_table "questions", :force => true do |t|
     t.string   "question"
@@ -71,6 +74,7 @@ ActiveRecord::Schema.define(:version => 20121201060319) do
     t.integer  "qid"
     t.string   "answer"
     t.integer  "pointsreceived"
+    t.boolean  "graded"
     t.integer  "submission_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false

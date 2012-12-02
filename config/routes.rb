@@ -29,6 +29,11 @@ MOOC::Application.routes.draw do
 	resources :studentanswers
   end
 
+  resources :questions do
+	resources :questionoptions
+  end
+
+
   match ':controller(/:action(/:id))(.:format)'
   root :to => 'sessions#login'
   match "signup", :to => "users#new"
