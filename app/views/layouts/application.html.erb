@@ -8,17 +8,15 @@
 </head>
 <body>
 	<div class="Main_Header">
-		<h1>Purple Fruit</h1>
-		<%unless session[:user_id]%>
+		<h1>MOOC Web Project</h1>
+		<%if session[:user_id]%>
 			<ul class="nav">
-				<li><%= link_to :Signup , :signup, class: "nav_links"%></li>|
-				<li><%= link_to :Login , :login, class: "nav_links"%></li>	
-			</ul>
-		<%else%>
-			<ul class="nav">
-				<li><%= link_to :Home , :home, class: "nav_links" %> |</li>
-				<li><%= link_to :Profile , :profile, class: "nav_links" %> |</li>
-				<li><%= link_to :Setting , :setting, class: "nav_links" %> |</li>
+				<li><%= link_to :Home , :home, class: "nav_links" %></li>
+				<li><%= link_to :Profile , :profile, class: "nav_links" %></li>
+				<%unless User.find(session[:user_id]).usertype.downcase == "student"%>
+					<li><%= link_to "Registered Users" , :setting, class: "nav_links" %></li>
+					<li><%= link_to "Registered Courses" , "/registeredcourse" %></li>
+				<%end%>
 				<li><%= link_to :Logout , :logout, class: "nav_links" %></li>	
 			</ul>
 		<%end%>

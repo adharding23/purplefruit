@@ -1,25 +1,44 @@
-<h2 class='User_Header'><%=@course.coursenumber%> <%=@course.name%>'s Assignments <h2>
+<%unless User.find(session[:user_id]).usertype == 'student'%>
+<h2 class='User_Header'>Assignment Actions<h2>
+</h6>
+<ul>
+<li><%= link_to 'Create New Assignment', new_course_assignment_path(@course) %></li>
+</ul>
+<%end%>
+
+
+<h2 class='User_Header'>Course <%=@course.coursenumber%> <%=@course.name%> Assignments <h2>
+</h6>
+
+<table border="1">
+<tr>
+<th>Name</th>
+<th>Total Points</th>
+<th>Due Date</th>
+<%if User.find(session[:user_id]).usertype == 'student'%>
+<th>Grade</th>
+<%end%>
+
 <% @course.assignments.each do |assignment| %>
-  <p>
-	<b>Assignment:</b>
-	<%unless DateTime.now > assignment.duedate %>
+	<tr>
+
+	<%if DateTime.now > assignment.duedate %>
 		<%unless User.find(session[:user_id]).usertype == 'student'%>
-			<%= link_to "Grade "+assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %> 
+			<td><%= link_to "Grade "+assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %></td> 
 		<%else%>
-			<%= assignment.name %>
+			<td><%= assignment.name %></td>
 		<%end%> 
 	<%else%>
-		<%= link_to assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %> 
+		<td><%= link_to assignment.name, course_assignment_path(:id => assignment.id, :course_id => assignment.course_id) %></td>
 	<%end%>
-	&emsp;
-	<%= assignment.totalpoints %> 
-	&emsp;
-	<%= assignment.duedate %>
-	&emsp;
-	<%unless DateTime.now > assignment.duedate %>
+	<td><%= assignment.totalpoints %></td>
+	<td><%= assignment.duedate %></td>
+
+	<%if User.find(session[:user_id]).usertype == 'student'%>
+	<%if DateTime.now > assignment.duedate %>
 		<% @uasobject = UsersAssignmentsSubmissions.find_by_user_id_and_assignment_id(session[:user_id],assignment.id)%>
 		<% if @uasobject.nil?%>
-			0
+			<td>0</td>
 		<% else %>
 			<% @submission = Submission.find(@uasobject.submission_id) %>
 			<%if @submission.completionstatus %>
@@ -31,18 +50,17 @@
 					<%end%>
 				<%end%>
 				<%if allgraded %>
-					<%=@submission.pointsreceived%>
+					<td><%=@submission.pointsreceived%></td>
 				<%else%>
-					<%="Not finished grading"%>
+					<td><%="Not finished grading"%></td>
 				<%end%>
 			<%else%>
-				<%="Grading not started"%>
+				<td><%="Grading not started"%></td>
 			<%end%>
 		<% end %>
+	<%else%>
+		<td>-</td>
 	<%end%>
-  </p>
+	<%end%>
 <% end %>
-
-<%unless User.find(session[:user_id]).usertype == 'student'%>
-	<%= link_to 'Create New Assignment', new_course_assignment_path(@course) %>
-<%end%>
+</table>

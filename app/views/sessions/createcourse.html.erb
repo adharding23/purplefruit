@@ -1,0 +1,17 @@
+<h2>Add Class</h2>
+	<%= form_for(:course, :url => {:controller => 'courses', :action => 'create'}) do |f| %>
+
+
+		<p> Course Id:</br> <%= f.text_field :coursenumber%> </p>
+
+		<p> Course Name:</br> <%= f.text_field :name%> </p>
+
+		<p> Year:</br> <%= f.text_field :year%></p>
+
+		<p> Semester:</br> <%= f.text_field :semester%> </p>
+		
+		<p> Section: </br> <%= f.text_field :section%> </p>
+
+		<%= f.submit :Submit %>
+	<% end %>
+

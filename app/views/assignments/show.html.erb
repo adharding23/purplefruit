@@ -1,71 +1,65 @@
 <h2 class='User_Header'><%=@assignment.name%> <h2>
-<p> Due Date:</br> <%= @assignment.duedate%> </p>
-<p> Total Points:</br> <%= @assignment.totalpoints%> </p>
+<h6/>
+<p><h4/> Due Date: <%= @assignment.duedate%> </p>
+<p><h4/> Total Points: <%= @assignment.totalpoints%> </p>
 
 <%unless User.find(session[:user_id]).usertype == 'student'%>
 <%if DateTime.now > @assignment.duedate %>
+
+<table border="1">
+<tr>
+<th>Student Name</th>
+<th>Submission ID</th>
+<th>Points Received</th>
+<th>Has Been Graded</th>
+<th>Link</th>
 	<%@allcoursestudents=CoursesUsers.find_all_by_course_id(@assignment.course_id)%>
 	<%@allcoursestudents.each do |courseuser| %>
+		 <tr>
 		<%@usersubmission=UsersAssignmentsSubmissions.find_by_user_id_and_assignment_id(courseuser.user_id, @assignment.id)%>
 		<%unless @usersubmission.nil?%>
 		<%@actualsubmission=Submission.find(@usersubmission.submission_id)%>
-		<p>
-			<%= User.find(courseuser.course_id).name %>
-			&emsp;
-			<%= @actualsubmission.id %> 
-			&emsp;
-			<%= @actualsubmission.pointsreceived %>
-			&emsp;
-			<%= @actualsubmission.completionstatus %>
-			<%= link_to "Grade Submission", assignment_submission_path(:user_id=>courseuser.user_id, :course_id=>courseuser.course_id,:assignment_id => @assignment.id, :submission_id => @actualsubmission.id) %> 
-
- 		 </p>
+			<td><%= User.find(courseuser.course_id).name %></td>
+			<td><%= @actualsubmission.id %> </td>
+			<td><%= @actualsubmission.pointsreceived %></td>
+			<td><%= @actualsubmission.completionstatus %></td>
+			<td><%= link_to "Grade Submission", assignment_submission_path(:user_id=>courseuser.user_id, :course_id=>courseuser.course_id,:assignment_id => @assignment.id, :submission_id => @actualsubmission.id) %></td> 
 		<%end%>
 
 	<%end%>
 <%else%>
-	<p>
-		<b>Question</b>
-		&emsp;
-		<b>Answer:</b>
-		&emsp;
-		<b>Hint:</b>
-		&emsp;
-		<b>Points:</b>
-		&emsp;
-		<b>MC?:</b>
-		&emsp;
-		<b>MC Options:</b>
-		&emsp;
- 	 </p>
 
-	<% @assignment.questions.each do |question| %>
- 	 <p>
-		<%= question.question %> 
-		&emsp;
-		<%= question.answer %>
-		&emsp;
-		<%= question.hint %>
-		&emsp;
-		<%= question.value %>
-		&emsp;
-		<%= question.mc %>
-		&emsp;
+<table border="1">
+<tr>
+<th>Question</th>
+<th>Answer</th>
+<th>Hint</th>
+<th>Points</th>
+<th>Is MC</th>
+<th>MC Option A</th>
+<th>MC Option B</th>
+<th>MC Option C</th>
+<th>MC Option D</th>
+<th>MC Option E</th>
+
+
+<% @assignment.questions.each do |question| %>
+ 	 <tr>
+		<td><%= question.question %></td> 
+		<td><%= question.answer %></td> 
+		<td><%= question.hint %></td> 
+		<td><%= question.value %></td> 
+		<td><%= question.mc %></td> 
 		<% if question.mc %>
-			<% alphabet = ["A","B","C","D","E"]%>
-			<% i = 0 %>
 			<% @questionoptions=Questionoption.find_all_by_question_id(question.id).reverse %>
 			<% @questionoptions.each do |option| %>
-				<%=alphabet[i]%>
-				<%i+=1%>
-				<%=option.option %>
-				&emsp;
+				<td><%=option.option %></td>
 			<% end %>
 		<%end%>
-
- 	 </p>
-	<% end %>
-
+<% end %>
+</table>
+	</br>
+	<hr>
 	<%= form_for(:assignments_questions, :url => {:controller => 'assignments_questions', :action => 'create'}) do |f| %>
 		<p> Select Question to Add From Short Answer Bank:</br> <%= collection_select(:assignments_questions, :question_id, Question.find_all_by_mc(false), :id, :question) %> </p>
 		<%= f.hidden_field :assignment_id, :value=>@assignment.id%>
@@ -77,8 +71,9 @@
 		<%= f.hidden_field :assignment_id, :value=>@assignment.id%>
 		<%= f.submit :Submit %>
 	<% end %>
-
-	<p/>
+	
+	</br>
+	<hr>
 
 	<b>Add Short Answer Question to Question Bank:</b>
 	<%= form_for(:question, :url => {:controller => 'questions', :action => 'create'}) do |f| %>
@@ -90,6 +85,9 @@
 		<p> Points:</br> <%= f.text_field :value%> </p>
 		<%= f.submit :Submit %>
 	<% end %>
+
+</br>
+
 
 	<b>Add Multiple Choice Question to Question Bank:</b>
 	<%= form_for(:question, :url => {:controller => 'questions', :action => 'create'}) do |f| %>
@@ -109,6 +107,22 @@
 	<%if DateTime.now > @assignment.duedate %>
 		<p> DUE DATE ALREADY PASSED </p>
 	<%else%>
+
+<table border="1">
+<tr>
+<th>Question</th>
+<th>Previous Answer</th>
+<th>Answer</th>
+<th>Hint</th>
+<th>Points</th>
+<th>Is MC</th>
+<th>MC Option A</th>
+<th>MC Option B</th>
+<th>MC Option C</th>
+<th>MC Option D</th>
+<th>MC Option E</th>
+
+	
 	<%@submission2=UsersAssignmentsSubmissions.where(:user_id=>session[:user_id], :assignment_id=>@assignment.id)%>
 	<%if @submission2.any?%>
 		<%@actualsubmission=Submission.find(@submission2.first_or_create.submission_id)%>
@@ -117,35 +131,49 @@
 			<%= f.hidden_field :submission_id, :value=>@submission2.first_or_create.submission_id%>
 
 			<% @assignment.questions.each do |question| %>
-  				<p>
-					<%= question.question %> 
-					&emsp;
-					<%= question.value %>
-					&emsp;
+				<tr>
+  				
+					<td><%= question.question %></td> 
+					<%@sanswer=Studentanswer.where(:submission_id=>@submission2.first_or_create.submission_id, :qid=>question.id)%>
+					<%if @sanswer.any?%>
+				 		<td><%=@sanswer.first_or_create.answer%> </td>
+					<%end%>
+
+					
 					<% if question.mc %>
-						<% alphabet = ["A","B","C","D","E"]%>
-						<% i = 0 %>
+						<td><%= f.text_field question.id%></td>
+					<%else%>
+				 		<td><%= f.text_area question.id%> </td>
+					<%end%>
+
+					<%if @sanswer.any?%>
+						<%if @sanswer.hintused%>
+							<td><%=question.hint%></td>
+						<%else%>
+							<%= form_for(:studentanswer, :url => {:controller => 'studentanswers', :action => 'create2'}) do |f2| %>
+								<%= f2.hidden_field @sanswer.answer question.id%>
+								<td><%= f2.submit "Show Hint" %></td>
+							<%end%>
+						<%end%>
+					<%else%>
+				 		<%= form_for(:studentanswer, :url => {:controller => 'studentanswers', :action => 'create2'}) do |f2| %>
+							<td><%= f2.submit "Show Hint" %></td>
+						<%end%>
+					<%end%>
+
+					<td><%= question.value %></td>
+					<td><%= question.mc %></td> 
+					<% if question.mc %>
 						<% @questionoptions=Questionoption.find_all_by_question_id(question.id).reverse %>
 						<% @questionoptions.each do |option| %>
-							<%=alphabet[i]%>
-							<%i+=1%>
-							<%=option.option %>
-							&emsp;
+							<td><%=option.option %></td>
 						<% end %>
 					<%end%>
-  				</p>
-				<% if question.mc %>
-					<p> Type Letter of Selected Answer:</br> <%= f.text_field question.id%> </p>
-				<%else%>
-					<p> Type Short Answer:</br> <%= f.text_field question.id%> </p>
-				<%end%>
-				<%@sanswer=Studentanswer.where(:submission_id=>@submission2.first_or_create.submission_id, :qid=>question.id)%>
-				<%if @sanswer.any?%>
-					<p> Previous Student Answer:</br> <%=@sanswer.first_or_create.answer%> </p>
-				<%end%>
-				
+  												
 			<% end %>
-						<%= f.submit :Submit %>
+			</table>
+			</br>
+			<%= f.submit :Submit %>
 		<% end %>
 	<%else%>
 		<%= form_for(:submission, :url => {:controller => 'submissions', :action => 'create', :assignment => @assignment}) do |f| %>

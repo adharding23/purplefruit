@@ -19,7 +19,7 @@ before_filter :save_login_state, :only => [:index, :login, :login_attempt]
 		authorized_user = User.authenticate(params[:username_or_email],params[:login_password])
 		if authorized_user
 			session[:user_id] = authorized_user.id
-			flash[:notice] = "Wow Welcome again, you logged in as #{authorized_user.id}"
+			flash[:notice] = "You logged in as User #{authorized_user.id}"
 			redirect_to(:action => 'home')
 
 

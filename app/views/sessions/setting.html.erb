@@ -1,1 +1,24 @@
-<h2 class='User_Header'><%=@current_user.id%> Setting <h2>
+<h2 class='User_Header'>Registered Users <h2>
+</h6>
+
+<%@students = User.find(:all)%>
+
+<table border="1">
+<tr>
+<th>User ID</th>
+<th>User Name</th>
+<th>User Username</th>
+<th>User Usertype</th>
+
+</tr>
+<%@students.each do |student|%>
+<tr>
+<td><%=student.id%></td>
+<td><%=student.name%></td>
+<td><%=student.username%></td>
+<td><%=student.usertype%></td>
+</tr>
+<%end%>
+</table>
+
+

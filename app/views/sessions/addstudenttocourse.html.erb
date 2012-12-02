@@ -1,0 +1,10 @@
+<h2>Add User to Course</h2>
+	<%= form_for(:courses_users, :url => {:controller => 'courses_users', :action => 'create'}) do |f| %>
+
+		<p> Course Id:</br> <%= f.text_field :course_id%> </p>
+
+		<p> User Id:</br> <%= f.text_field :user_id%> </p>
+
+		<%= f.submit :Submit %>
+	<% end %>
+

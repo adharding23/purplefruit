@@ -1,47 +1,34 @@
-<h2 class='User_Header'><%=@current_user.name%>'s Courses <h2>
-<% @current_user.courses.each do |course| %>
-  <p>
-    <b>Course ID:</b>
-    <%= course.id %>
-	&nbsp &nbsp &nbsp 
-	<b>Course Name:</b>
-    <%= course.name %>
-	<ul class="nav">
-		<li><%= link_to 'Assignments', course %></li>
-	</ul>
-  </p>
-<% end %>
-
 <%unless User.find(session[:user_id]).usertype == 'student'%>
-<div class= "Add_Students_To_Classes">
-	<h2>Add Students to Class</h2>
-	<%= form_for(:courses_users, :url => {:controller => 'courses_users', :action => 'create'}) do |f| %>
-
-		<p> Course Id:</br> <%= f.text_field :course_id%> </p>
-
-		<p> Student Id:</br> <%= f.text_field :user_id%> </p>
-
-		<%= f.submit :Submit %>
-	<% end %>
-</div>
-
-<div class= "Class_Form">
-	<h2>Add Class</h2>
-	<%= form_for(:course, :url => {:controller => 'courses', :action => 'create'}) do |f| %>
-
-
-		<p> Course Id:</br> <%= f.text_field :coursenumber%> </p>
-
-		<p> Course Name:</br> <%= f.text_field :name%> </p>
-
-		<p> Year:</br> <%= f.text_field :year%></p>
-
-		<p> Semester:</br> <%= f.text_field :semester%> </p>
-		
-		<p> Section: </br> <%= f.text_field :section%> </p>
-
-		<%= f.submit :Submit %>
-	<% end %>
-
-</div>
+<h2 class='User_Header'>Course Actions<h2>
+</h6>
+<ul>
+<li><%= link_to 'Create Course', "/createcourse" %></li>
+<li><%= link_to 'Add User to Class', "/addstudenttocourse" %></li>
+</ul>
 <%end%>
+
+<h2 class='User_Header'><%=@current_user.name%>'s Courses <h2>
+</h6>
+
+<table border="1">
+<tr>
+<th>ID</th>
+<th>Number</th>
+<th>Name</th>
+<th>Year</th>
+<th>Semester</th>
+<th>Section</th>
+<th>Assignments</th>
+<% @current_user.courses.each do |course| %>
+<tr>
+<td><%=course.id%></td>
+<td><%=course.coursenumber%></td>
+<td><%=course.name%></td>
+<td><%=course.year%></td>
+<td><%=course.semester.capitalize%></td>
+<td><%=course.section%></td>
+<td><%= link_to 'Assignments', course %></td>
+</tr>
+
+<% end %>
+</table>

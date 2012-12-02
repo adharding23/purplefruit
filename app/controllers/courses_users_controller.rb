@@ -12,7 +12,7 @@ class CoursesUsersController < ApplicationController
 		flash[:notice] = "Form is invalid"
 		flash[:color]= "invalid"
 	end
- 	render "new"
+ 	redirect_to "/home"
   end
 
 end

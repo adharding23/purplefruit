@@ -3,21 +3,63 @@ class StudentanswersController < ApplicationController
 		@studentanswer = Studentanswer.new
 	end
 
-	def create
+
+	def createhint
 		@submission = Submission.find(params[:studentanswer][:submission_id])
 		#@studentanswer = @submission.studentanswers.build()
 		params[:studentanswer].each do |key, value|
 			if is_numeric?(key)
+				unless value.empty?
 				@studentanswer = @submission.studentanswers.build()#({:studentanswer=>{:qid=>key,:answer=>value,:pointsreceived=>0}})
 				#@studentanswer = Studentanswer.new
 				@studentanswer.qid = key
 				@studentanswer.answer = value
 				@studentanswer.pointsreceived = 0
 				@studentanswer.graded = false
-				@deleteanswers = Studentanswer.find_all_by_submission_id_and_qid(@submission.id,key)
-				@deleteanswers.each { |answer| answer.destroy }
+				@studentanswer.usedhint = true
+					@deleteanswers = Studentanswer.find_all_by_submission_id_and_qid(@submission.id,key)
+					@deleteanswers.each { |answer| answer.destroy }
 				#@submission.studentanswers = @studentanswer
 				@studentanswer.save
+				end
+			else
+				flash[:notice] = key
+			end
+		end
+		if @studentanswer.save
+			flash[:notice] = "Answers Added"
+			flash[:color]= "valid"
+		else
+			flash[:notice] = "Form is invalid"
+			flash[:color]= "invalid"
+		end
+		redirect_to :back
+	end
+
+
+	def create
+		@submission = Submission.find(params[:studentanswer][:submission_id])
+		#@studentanswer = @submission.studentanswers.build()
+		params[:studentanswer].each do |key, value|
+			if is_numeric?(key)
+				unless value.empty?
+				@studentanswer = @submission.studentanswers.build()#({:studentanswer=>{:qid=>key,:answer=>value,:pointsreceived=>0}})
+				#@studentanswer = Studentanswer.new
+				@studentanswer.qid = key
+				@studentanswer.answer = value
+				@studentanswer.pointsreceived = 0
+				@studentanswer.graded = false
+				@studentanswer.usedhint = false
+				@deleteanswers = Studentanswer.find_all_by_submission_id_and_qid(@submission.id,key)
+				@deleteanswers.each { |answer| 
+					if answer.usedhint
+						@studentanswer.usedhint = true
+					end
+					answer.destroy
+				}
+				#@submission.studentanswers = @studentanswer
+				@studentanswer.save
+				end
 			else
 				flash[:notice] = key
 			end

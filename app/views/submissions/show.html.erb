@@ -1,17 +1,25 @@
 <h2 class='User_Header'><%="Student "+@user.id.to_s+"'s "+@assignment.name+" Submission"%> <h2>
+<h4/>
+
+<table border="1">
+<tr>
+<th>Question</th>
+<th>Correct Answer</th>
+<th>Student Answer</th>
+<th>Question Value</th>
+<th>Current Points Awarded</th>
+<th>New Points Awarded</th>
 
 <%@allstudentanswers=Studentanswer.find_all_by_submission_id(@submission.id)%>
 <%= form_for(:studentanswer, :url => {:controller => 'studentanswers', :action => 'update'}) do |f| %>
 <%= f.hidden_field :submission_id, :value=>@submission.id%>
 <%@allstudentanswers.each do |answer| %>
+	<tr>
 	<%@matchingquestion=Question.find_by_id(answer.qid)%>
-	<p>
-		<%= @matchingquestion.question %> 
-		&emsp;
-		<%= @matchingquestion.answer %>
-		&emsp;
-		<%= answer.answer %>
-		<p> Points Awarded?:</br> <%= f.text_field answer.id%> </p>
+		<td><%= @matchingquestion.question %></td>
+		<td><%= @matchingquestion.answer %></td>
+		<td><%= answer.answer %></td>
+		<td><%= @matchingquestion.value %></td>
 		<%if @matchingquestion.mc && answer.graded == false%>
 			<% alphabet = ["A","B","C","D","E"]%>
 			<% i = 0 %>
@@ -33,9 +41,11 @@
 			<%answer.graded=true%>
 			<%answer.save%>
 		<%end%>
-		<p> Current Points Awarded:</br> <%=answer.pointsreceived%> </p>
- 	</p>
+		<td><%=answer.pointsreceived%></td>
+		<td><%= f.text_field answer.id%> </td>
 <%end%>
+</table>
+</br>
 <%= f.submit :Submit %>
 <%end%>
 

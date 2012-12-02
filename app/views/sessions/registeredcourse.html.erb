@@ -1,0 +1,26 @@
+<h2 class='User_Header'>Registered Courses <h2>
+</h6>
+
+<%@courses = Course.find(:all)%>
+
+<table border="1">
+<tr>
+<th>ID</th>
+<th>Number</th>
+<th>Name</th>
+<th>Year</th>
+<th>Semester</th>
+<th>Section</th>
+<% @courses.each do |course| %>
+<tr>
+<td><%=course.id%></td>
+<td><%=course.coursenumber%></td>
+<td><%=course.name%></td>
+<td><%=course.year%></td>
+<td><%=course.semester.capitalize%></td>
+<td><%=course.section%></td>
+</tr>
+
+<% end %>
+</table>
+

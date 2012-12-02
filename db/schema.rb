@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(:version => 20121201060319) do
     t.string   "answer"
     t.integer  "pointsreceived"
     t.boolean  "graded"
+    t.boolean  "usedhint"
     t.integer  "submission_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false

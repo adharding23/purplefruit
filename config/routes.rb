@@ -42,6 +42,10 @@ MOOC::Application.routes.draw do
   match "home", :to => "sessions#home"
   match "profile", :to => "sessions#profile"
   match "setting", :to => "sessions#setting"
+  match "createcourse", :to => "sessions#createcourse"
+  match "addstudenttocourse", :to => "sessions#addstudenttocourse"
+  match "registeredcourse", :to => "sessions#registeredcourse"
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
